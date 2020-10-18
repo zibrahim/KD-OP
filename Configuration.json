@@ -1,0 +1,113 @@
+{
+	"paths": {
+		"path":  "/Users/babylon/Documents/Covid/Data/",
+		"data_path" : "/Users/babylon/Documents/Data/KCHData/",
+		"stats_path":  "/Users/babylon/Documents/Data/KCHData/Stats/",
+		"autoencoder_models_path": "Run/SavedModels/AutoEncoder/",
+		"xgboost_models_path": "Run/SavedModels/XGBoost/",
+		"autoencoder_output_path": "Run/Output/AutoEncoder/",
+		"xgboost_output_path": "Run/Output/XGBoost/",
+		"classification_report_path": "Run/ClassificationReport/",
+		"test_data_path": "Run/Output/TestSets/"
+
+	},
+	"data": {
+		"grouping": "PatientID",
+		"ordering": "Hour",
+		"sequence_length": 14,
+		"batch_size": 12,
+		"static_columns": [
+             "Age",
+             "SxToAdmit",
+			 "NumComorbidities"
+		],
+
+		"dynamic_columns": [
+			"Albumin",
+			"Creatinine",
+			"C-Reactive-Protein",
+			"DiasBP",
+			"FiO2",
+			"Hb",
+			"Lymphocytes",
+			"Neutrophils",
+			"NEWS2",
+			"PLT",
+			"PO2/FIO2",
+			"SysBP",
+			"Urea",
+			"WBC"
+		],
+		"classification_outcome": [
+			"Mortality3Days",
+			"Mortality5Days",
+			"Mortality7Days",
+			"Mortality14Days",
+			"Mortality30Days",
+			"ITUAdmission3Days",
+			"ITUAdmission5Days",
+			"ITUAdmission7Days",
+			"ITUAdmission14Days",
+			"ITUAdmission30Days"
+		],
+		"classification_target": [
+			"Mortality",
+			"ITUAdmission"
+		],
+		"classification_label": {
+			"Mortality3Days":" 3D MOR",
+			"Mortality5Days":" 5D MOR",
+			"Mortality7Days":" 7D MOR",
+			"Mortality14Days":"14D MOR",
+			"Mortality30Days":"30D MOR",
+			"ITUAdmission3Days":" 3D ITU",
+			"ITUAdmission5Days":" 5D ITU",
+			"ITUAdmission7Days":" 7D ITU",
+			"ITUAdmission14Days":"14D ITU",
+			"ITUAdmission30Days":"30D ITU"
+		},
+		"regression_outcome": ["PO2/FIO2"]
+	},
+	"training": {
+		"folds": 10,
+		"epochs": 400
+	},
+	"model": {
+		"name": "lstm-binary-classifier",
+		"loss": "binary_crossentropy",
+		"optimizer": "adam",
+		"metrics": ["accuracy"],
+		"save_dir": "/Users/babylon/Documents/Data/KCHData/Models/LSTM",
+		"layers": [
+			{
+				"type": "lstm",
+				"neurons": 100,
+				"input_timesteps": -1,
+				"input_dim": -1,
+				"return_seq": true
+			},
+			{
+				"type": "dropout",
+				"rate": 0.2
+			},
+			{
+				"type": "lstm",
+				"neurons": 100,
+				"return_seq": true
+			},
+			{
+				"type": "lstm",
+				"neurons": 100,
+				"return_seq": false
+			},
+			{
+				"type": "dropout",
+				"rate": 0.2
+			},
+			{
+				"type": "dense",
+				"activation": "sigmoid"
+			}
+		]
+	}
+}
